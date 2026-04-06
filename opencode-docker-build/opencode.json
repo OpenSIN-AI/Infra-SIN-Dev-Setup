@@ -1,0 +1,70 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "plugin": [
+    "opencode-antigravity-auth@1.6.5-beta.0",
+    "oh-my-opencode@3.11.2"
+  ],
+  "model": "opencode/qwen3.6-plus-free",
+  "provider": {
+    "google": {
+      "options": {
+        "apiKey": "AIzaSyAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "timeout": false,
+        "chunkTimeout": 999999999
+      },
+      "models": {
+        "antigravity-gemini-3.1-pro": {
+          "name": "Gemini 3.1 Pro (Antigravity)",
+          "limit": { "context": 1048576, "output": 65535 },
+          "modalities": { "input": ["text", "image", "pdf"], "output": ["text"] },
+          "variants": { "low": { "thinkingLevel": "low" }, "high": { "thinkingLevel": "high" } }
+        },
+        "antigravity-claude-sonnet-4-6": {
+          "name": "Claude Sonnet 4.6 (Antigravity)",
+          "id": "antigravity-claude-sonnet-4-6",
+          "limit": { "context": 1000000, "output": 8192 },
+          "variants": { "low": { "thinkingBudget": 8192 }, "medium": { "thinkingBudget": 16384 }, "high": { "thinkingBudget": 32768 } }
+        },
+        "antigravity-claude-opus-4-6-thinking": {
+          "name": "Claude Opus 4.6 Thinking (Antigravity)",
+          "id": "antigravity-claude-opus-4-6-thinking",
+          "limit": { "context": 1000000, "output": 32000 },
+          "variants": { "low": { "thinkingBudget": 8192 }, "medium": { "thinkingBudget": 16384 }, "high": { "thinkingBudget": 32768 } }
+        }
+      },
+      "npm": "@ai-sdk/google"
+    },
+    "openrouter": {
+      "npm": "@openrouter/ai-sdk-provider",
+      "options": {
+        "apiKey": "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",
+        "baseURL": "http://127.0.0.1:9338/api/v1"
+      },
+      "models": {
+        "qwen/qwen3.6-plus:free": { "name": "Qwen 3.6 Plus (Free)", "limit": { "context": 1000000, "output": 16384 } },
+        "qwen/qwen3-coder": { "name": "Qwen 3 Coder (Free)", "limit": { "context": 65536, "output": 16384 } },
+        "google/gemini-2.5-flash-preview:free": { "name": "Gemini 2.5 Flash (Free)", "limit": { "context": 1048576, "output": 65536 } }
+      }
+    }
+  },
+  "agent": {
+    "explore": {
+      "model": "opencode/nemotron-3-super-free",
+      "options": { "reasoningEffort": "high" },
+      "steps": 999999,
+      "fallback": "opencode/big-pickle"
+    },
+    "librarian": {
+      "model": "opencode/nemotron-3-super-free",
+      "options": { "reasoningEffort": "high" },
+      "steps": 999999,
+      "fallback": "opencode/big-pickle"
+    },
+    "oracle": {
+      "model": "opencode/qwen3.6-plus-free",
+      "options": { "reasoningEffort": "high" },
+      "steps": 999999,
+      "fallback": "opencode/big-pickle"
+    }
+  }
+}

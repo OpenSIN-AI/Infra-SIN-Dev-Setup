@@ -3,7 +3,7 @@ FROM alpine AS base
 ARG BUN_RUNTIME_TRANSPILER_CACHE_PATH=0
 ENV BUN_RUNTIME_TRANSPILER_CACHE_PATH=${BUN_RUNTIME_TRANSPILER_CACHE_PATH}
 
-RUN apk add --no-cache libgcc libstdc++ ripgrep git curl bash
+RUN apk add --no-cache libgcc libstdc++ ripgrep git curl bash nodejs npm
 RUN apk add --no-cache github-cli
 
 FROM base AS build-amd64

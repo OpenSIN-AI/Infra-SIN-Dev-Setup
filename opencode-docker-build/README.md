@@ -35,7 +35,7 @@ ENTRYPOINT ["opencode"]
 
 ## OpenCode Binary herunterladen
 
-Lade das OpenCode Binary für Linux ARM64 von der OpenCode Releases-Seite herunter. Suche die Datei, die `opencode-linux-arm64-musl` im Namen hat, entpacke sie und platziere das opencode Binary in einem Unterverzeichnis `dist/opencode-linux-arm64-musl/bin/` relativ zu deinem Dockerfile.
+Lade das OpenCode Binary für Linux ARM64 von der OpenCode Releases-Seite herunter. Suche die Datei, die `opencode-linux-arm64-musl` im Namen hat (z.B. `opencode-linux-arm64-musl.tar.gz`), entpacke sie und platziere das opencode Binary in einem Unterverzeichnis `dist/opencode-linux-arm64-musl/bin/` relativ zu deinem Dockerfile.
 
 Dein Verzeichnis sollte dann so aussehen:
 
@@ -48,16 +48,9 @@ Dein Verzeichnis sollte dann so aussehen:
             └── opencode
 ```
 
-Oder nutze das mitgelieferte Script:
-
-```bash
-chmod +x download-binary.sh
-./download-binary.sh
-```
-
 ## Docker Image bauen
 
-Öffne dein Terminal, navigiere zu dem Verzeichnis, in dem sich dein Dockerfile befindet, und führe den folgenden Befehl aus:
+Öffne dein Terminal, navigiere zu dem Verzeichnis, in dem sich dein Dockerfile befindet, und führe den folgenden Befehl aus, um das Docker-Image zu bauen:
 
 ```bash
 docker build --platform linux/arm64 -t opencode-cli-gh-m1 .
@@ -66,6 +59,8 @@ docker build --platform linux/arm64 -t opencode-cli-gh-m1 .
 Der Image-Name ist hier `opencode-cli-gh-m1`.
 
 ## Docker Container starten und OpenCode CLI verwenden
+
+Um sicherzustellen, dass jeder Container eine komplett separate OpenCode CLI-Maschine mit eigenen ID-Daten ist, solltest du bei jedem Start eines neuen Containers entweder ein neues, isoliertes Docker-Volume verwenden oder keine persistenten Speicher mounten.
 
 ### a. Einmalige Nutzung (Daten gehen nach Beenden verloren)
 
@@ -97,9 +92,9 @@ Jeder Container (`opencode-machine-1`, `opencode-machine-2` usw.) wird sein eige
 
 ## OpenCode CLI Standardmodell setzen
 
-Um das Standardmodell in der OpenCode CLI auf `opencode/qwen3.6-plus-free` zu setzen, musst du dies innerhalb des laufenden Docker-Containers tun. OpenCode speichert seine Konfiguration in einer `opencode.json` Datei.
+Um das Standardmodell in der OpenCode CLI auf `opencode/qwen3.6-plus-free` zu setzen, musst du dies innerhalb des laufenden Docker-Containers tun. OpenCode speichert seine Konfiguration in einer `opencode.json` Datei. Du kannst dies über die CLI-Befehle oder durch direkte Bearbeitung der Konfigurationsdatei tun.
 
-Nachdem du den Container gestartet hast (z.B. `docker run -it opencode-cli-gh-m1 bash`), führe im Container folgenden Befehl aus:
+Nachdem du den Container gestartet hast (z.B. `docker run -it opencode-cli-gh-m1 bash`), führe im Container folgende Befehle aus:
 
 ```bash
 opencode config set model opencode/qwen3.6-plus-free
@@ -107,4 +102,4 @@ opencode config set model opencode/qwen3.6-plus-free
 
 Dies setzt das Standardmodell für die OpenCode CLI innerhalb dieses spezifischen Containers. Jede deiner separaten "Maschinen" (Container mit eigenen Volumes) würde dieses Modell standardmäßig verwenden, wenn du den Befehl entsprechend ausführst.
 
-Zusätzlich zum Modell kannst du auch andere Provider (Anbieter) verbinden. Die Provider-Informationen werden vom globalen Synchronisierungs-Kontext abgerufen.
+Zusätzlich zum Modell kannst du auch andere Provider (Anbieter) verbinden, wie in AI Agent Configuration and Workflows und Core Application Architecture and Services erwähnt. Die SettingsProviders Komponente (`packages/app/src/components/settings-providers.tsx`) zeigt, wie verschiedene Provider verbunden werden können, entweder über API-Schlüssel oder über die Konfigurationsdatei. Die Provider-Informationen werden vom `useProviders` Hook aus dem globalen Synchronisierungs-Kontext (`packages/app/src/hooks/use-providers.ts`, `packages/app/src/context/global-sync.tsx`) abgerufen.

@@ -1,38 +1,42 @@
-# Infra-SIN-Dev-Setup
+# OpenSIN Development Environment Setup
 
-Development Environment Setup
+> Complete setup guide for OpenSIN development — macOS, OCI VM, Docker, Cloud Storage
 
-## Purpose
+## 🚀 Quick Start
 
-MCP Server providing tool capabilities to the OpenSIN-AI agent fleet.
+### 1. Local Setup
+- **macOS:** [macOS Dev Setup Guide](macOS-dev-setup.md)
+- **OCI VM:** [Oracle Cloud Setup](OCI-dev-setup.md)
+- **Docker:** [Docker Build Guide](opencode-docker-build/)
 
-## MCP Configuration
+### 2. Cloud Storage Setup
+OpenSIN nutzt **Box.com** (10 GB free) als primären Cloud Storage für alle Dateien:
 
-| Property | Value |
-|:---|:---|
-| **Type** | MCP Server |
-| **Transport** | stdio / HTTP |
-| **Protocol** | MCP 2.0 |
+| Storage | Shared Link | Purpose |
+|---------|------------|---------|
+| **Public Files** | https://app.box.com/s/1st624o9eb5xdistusew5w0erb8offc7 | Logos, Bilder, Docs — öffentlich erreichbar |
+| **Cache** | https://app.box.com/s/9s5htoefw1ux9ajaqj656v9a02h7z7x1 | Logs, Cache, Temp Files |
 
-## Agent Config System v5
+→ **[Komplette Box Storage Doku](box-storage.md)**
 
-This MCP server is part of the OpenSIN ecosystem:
+## 📁 Repository Structure
 
-| Datei | Zweck |
-|:---|:---|
-| `opencode.json` | Haupt-Config (Provider, Modelle, MCPs) |
-| `oh-my-sin.json` | Zentrales Team Register |
-| `oh-my-openagent.json` | Subagenten-Modelle |
+| Directory | Purpose |
+|-----------|---------|
+| `macOS-dev-setup.md` | Local development environment setup |
+| `OCI-dev-setup.md` | Oracle Cloud Infrastructure setup |
+| `opencode-docker/` | Docker container configurations |
+| `opencode-dev-setup.md` | OpenCode CLI setup |
+| `github/` | GitHub workflows and templates |
+| `box-storage.md` | Box.com & Google Drive storage configuration |
 
-### Subagenten-Modelle
+## 🔗 Related Repos
 
-| Subagent | Modell |
-|:---|:---|
-| **explore** | `nvidia-nim/stepfun-ai/step-3.5-flash` |
-| **librarian** | `nvidia-nim/stepfun-ai/step-3.5-flash` |
-
-→ [Full Documentation](https://github.com/OpenSIN-AI/OpenSIN-documentation/blob/main/docs/guide/agent-configuration.md)
+- [OpenSIN-onboarding](https://github.com/OpenSIN-AI/OpenSIN-onboarding) — End-user onboarding
+- [OpenSIN-documentation](https://github.com/OpenSIN-AI/OpenSIN-documentation) — Full documentation
+- [OpenSIN-overview](https://github.com/OpenSIN-AI/OpenSIN-overview) — Organization overview
+- [Infra-SIN-Docker-Empire](https://github.com/OpenSIN-AI/Infra-SIN-Docker-Empire) — Docker infrastructure
 
 ## License
 
-MIT
+Apache 2.0

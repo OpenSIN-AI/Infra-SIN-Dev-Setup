@@ -72,7 +72,7 @@ Dieses Repository dokumentiert und automatisiert das komplette OpenSIN-AI Develo
 | **macOS Development Environment** | Homebrew, Git, Node.js, Bun, Python, VS Code — richtig konfiguriert |
 | **OpenCode CLI Stack** | Der komplette upgraded-opencode-stack mit allen Skills, Plugins und Agents |
 
-**Kein Manueles Setup mehr** — folge den Anleitungen und dein System ist in 30 Minuten einsatzbereit.
+**Kein manuelles Setup mehr** — folge den Anleitungen und dein System ist in 30 Minuten einsatzbereit.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -134,7 +134,7 @@ sin-sync
 | **n8n Workflow Engine** | Workflow Automation auf OCI VM | ✅ |
 | **A2A-SIN-GitHub-Action** | CI/CD-ähnliche Automation (KEINE GitHub Actions!) | ✅ |
 | **Box.com Storage** | Unlimited Cloud Storage für Logs/Screenshots | ✅ |
-| **OpenCode CLI** | Mit 29+ Skills, 5 Plugins, 21 Agents | ✅ |
+| **OpenCode CLI** | Mit 44 Skills, 4 Plugins, 21 Agents | ✅ |
 | **sin-sync** | Config-Sync Mac → OCI VM → HF VMs | ✅ |
 | **Zentrales A2A Team Register** | 17 Teams klassifiziert in oh-my-sin.json | ✅ |
 | **Budget Alerts** | OCI Cost Monitoring (Pflicht!) | ✅ |
@@ -149,10 +149,10 @@ sin-sync
 - **sin-supabase** — Datenbank (200 GB Storage)
 
 ### OpenCode Stack
-- **29+ Custom Skills** — A2A Agent Builder, Deploy, Debug, Browser Automation
-- **5 Auth Plugins** — Antigravity OAuth, Qwen OAuth, OpenRouter Proxy
-- **11 CLI Tools** — sin-sync, sin-n8n, sin-telegrambot, sin-rotate, sin-health
-- **13 Custom Commands** — Swarm orchestration, Terminal orchestration, Zeus bootstrap
+- **44 Custom Skills** — A2A Agent Builder, Deploy, Debug, Browser Automation
+- **4 Plugins** — Antigravity OAuth, Qwen OAuth, OpenRouter Proxy
+- **27 MCP Servers** — sin-sync, sin-n8n, sin-telegrambot, sin-rotate, sin-health, etc.
+- **12 Custom Commands** — Swarm orchestration, Terminal orchestration, Zeus bootstrap
 - **21 A2A Agents** — Zeus, Simone, Frontend, Backend, Fullstack, etc.
 - **Global-Brain (DPMA v4)** — Multi-Project Memory
 - **Local-Brain / GraphRAG** — Projekt-basiertes Plan-Gedächtnis
@@ -236,10 +236,10 @@ flowchart TB
 
 | Komponente | Anzahl | Details |
 |:---|:---:|:---|
-| **Skills** | 29+ | create-a2a, create-a2a-team, enterprise-deep-debug, browser-crashtest-lab, etc. |
-| **Plugins** | 5 | opencode-antigravity-auth, opencode-qwen-auth, opencode-openrouter-auth, etc. |
-| **CLI Tools** | 11 | sin-sync, sin-n8n, sin-telegrambot, sin-rotate, sin-health, etc. |
-| **Custom Commands** | 13 | omoc-jam, omoc-max, sin-terminal-orchestrate, sin-zeus-bootstrap, etc. |
+| **Skills** | 44 | create-a2a, create-a2a-team, enterprise-deep-debug, browser-crashtest-lab, etc. |
+| **Plugins** | 4 | opencode-antigravity-auth, opencode-qwen-auth, opencode-openrouter-auth, etc. |
+| **MCP Servers** | 27 | sin-sync, sin-n8n, sin-telegrambot, sin-rotate, sin-health, etc. |
+| **Custom Commands** | 12 | omoc-jam, omoc-max, sin-terminal-orchestrate, sin-zeus-bootstrap, etc. |
 | **A2A Agents** | 21 | SIN-Zeus, SIN-Simone-MCP, A2A-SIN-Frontend, Backend, Fullstack, etc. |
 | **Provider Configs** | 5 | Google Antigravity, OpenAI, NVIDIA NIM, OpenRouter, Qwen |
 

@@ -1,0 +1,74 @@
+# OpenSIN Development Environment Setup
+
+> Complete setup guide for OpenSIN development — macOS, OCI VM, Docker, Cloud Storage
+
+## Documentation
+
+- [README](https://github.com/OpenSIN-AI/dev-setup/blob/main/README.md) - Quick start, features, architecture
+- [macOS Setup Guide](https://github.com/OpenSIN-AI/dev-setup/blob/main/macOS-dev-setup.md) - Local development on Mac
+- [OCI Setup Guide](https://github.com/OpenSIN-AI/dev-setup/blob/main/OCI-dev-setup.md) - Oracle Cloud A1.Flex VM setup
+- [OpenCode CLI Setup](https://github.com/OpenSIN-AI/dev-setup/blob/main/opencode-dev-setup.md) - OpenCode CLI installation
+- [Docker Setup](https://github.com/OpenSIN-AI/dev-setup/blob/main/opencode-docker-build/) - Docker development
+- [Box Storage Guide](https://github.com/OpenSIN-AI/dev-setup/blob/main/box-storage.md) - Box.com integration
+- [Contributing](https://github.com/OpenSIN-AI/dev-setup/blob/main/CONTRIBUTING.md) - How to contribute
+- [Security Policy](https://github.com/OpenSIN-AI/dev-setup/blob/main/SECURITY.md) - Security policy
+- [Changelog](https://github.com/OpenSIN-AI/dev-setup/blob/main/CHANGELOG.md) - Version history
+
+## Key Information
+
+- License: Apache 2.0
+- Languages: Bash, Python, YAML, Markdown
+- Platforms: macOS, Oracle Cloud (OCI), Docker
+- Tech Stack: Homebrew, Git, Bun, Python, Docker, VS Code, OpenCode CLI
+- Cloud Region: Frankfurt eu-frankfurt-1 (OCI)
+- Cloud VM: Always-Free A1.Flex (4 OCPUs, 24 GB RAM)
+- Storage: Box.com (10 GB free)
+- Repo: https://github.com/OpenSIN-AI/dev-setup
+
+## What This Project Does
+
+This is the **central setup documentation system** for OpenSIN-AI developers. It provides step-by-step guides for:
+
+1. **macOS Development Environment** - Set up a MacBook as a full development machine with Homebrew, Git, Node.js (Bun), Python, Docker
+2. **Oracle Cloud Infrastructure VM** - Create a free A1.Flex cloud VM in Frankfurt with Ubuntu 22.04/24.04 LTS
+3. **Docker Development** - Containerized development with Docker and Docker Compose
+4. **Cloud Storage** - Box.com integration for logs, screenshots, backups (10 GB free)
+5. **OpenCode CLI** - Installation and configuration of the OpenCode CLI for A2A agent control
+
+## Architecture
+
+- Local MacBook → VS Code Remote SSH → OCI VM
+- Docker containers on both local Mac and OCI VM
+- Box.com cloud storage for persistent file backup
+- GitHub workflows for CI/CD automation
+
+## Quick Start Commands
+
+```bash
+# macOS setup
+./setup-mac.sh
+
+# Clone and explore
+git clone https://github.com/OpenSIN-AI/dev-setup.git
+cd dev-setup
+
+# SSH to OCI VM (after setup)
+ssh -i ~/.ssh/oci_key ubuntu@<VM_IP>
+
+# Docker on OCI
+docker run -d -p 80:80 nginx
+```
+
+## Related Repos
+
+- OpenSIN-onboarding: https://github.com/OpenSIN-AI/OpenSIN-onboarding
+- OpenSIN-documentation: https://github.com/OpenSIN-AI/OpenSIN-documentation
+- OpenSIN-overview: https://github.com/OpenSIN-AI/OpenSIN-overview
+- Infra-SIN-Docker-Empire: https://github.com/OpenSIN-AI/Infra-SIN-Docker-Empire
+- upgraded-opencode-stack: https://github.com/OpenSIN-AI/upgraded-opencode-stack
+
+## Links
+
+- GitHub: https://github.com/OpenSIN-AI/dev-setup
+- Issues: https://github.com/OpenSIN-AI/dev-setup/issues
+- License: https://github.com/OpenSIN-AI/dev-setup/blob/main/LICENSE

@@ -8,7 +8,7 @@ Dieses Repository dokumentiert das Setup für eine **OCI Always Free Compute Ins
 
 ## 📋 Inhaltsverzeichnis
 
-1. [Voraussetzungen](#1-voraussetzungen)
+1. [Oracle Cloud Account erstellen & A1.Flex VM starten](#1-oracle-cloud-account-erstellen--a1flex-vm-starten)
 2. [Tool-Übersicht](#2-tool-übersicht)
 3. [Basis-Setup & System-Update](#3-basis-setup--system-update)
 4. [Installation der Core-Tools](#4-installation-der-core-tools)
@@ -17,17 +17,135 @@ Dieses Repository dokumentiert das Setup für eine **OCI Always Free Compute Ins
 
 ---
 
-## 1. Voraussetzungen
+## 1. Oracle Cloud Account erstellen & A1.Flex VM starten
 
-Bevor das Setup gestartet wird, müssen folgende Punkte auf der OCI-Plattform erledigt sein:
-* Eine laufende OCI Compute Instance (Empfohlenes Image: **Ubuntu 22.04 LTS** oder **24.04 LTS**)
-* Ein konfiguriertes SSH-Schlüsselpaar für den Zugriff
-* Die öffentliche IP-Adresse der VM
+> **⚠️ WICHTIG: A1.Flex Verfügbarkeit (Frankfurt, April 2026)**
+> Die kostenlose A1.Flex Instanz (4 OCPUs, 24 GB RAM) ist in **fast allen Regionen stark überlaufen** — auch Frankfurt (`eu-frankfurt-1`). Frankfurt hat jedoch **3 Availability Domains (AD1, AD2, AD3)** — wenn AD1 voll ist, versuche AD2 oder AD3! Falls keine AD funktioniert, nutze den **PAYGO-Workaround** (siehe unten).
 
-Verbindung zum Server herstellen (vom lokalen Mac):
+---
+
+### Schritt 1: Oracle Cloud Free Tier Konto erstellen
+
+**URL:** [https://www.oracle.com/cloud/free/](https://www.oracle.com/cloud/free/)
+
+1. Klicke auf **"Start for free"**
+2. Wähle **"Sign up with Google"** oder Email/Passwort
+3. **Wichtig:** Bei der Registrierung als **Home Region** wählen:
+   - `Germany Central (Frankfurt) — eu-frankfurt-1` ✅ (weil wir in Berlin sind)
+   - Frankfurt hat 3 ADs = bessere Chance auf A1.Flex
+4. Gib echte Daten ein — Oracle prüft die Telefonnummer per SMS oder Anruf
+5. Zahlungsinformationen: Eine **echte Kredit-/Debitkarte** wird benötigt
+   - Es wird ein **$1-100$ Test-Block** gemacht (temporär, wird nach 1-7 Tagen freigegeben)
+   - Keine automatische Abrechnung solange du die Always-Free-Limits einhältst
+
+**Häufige Fehler bei der Registrierung:**
+- ❌ Falsche Telefonnummer → Oracle kann nicht verifizieren → Konto gesperrt
+- ❌ Virtuelle/Prepaid-Karten → oft abgelehnt → echte Karte verwenden
+- ❌ Home Region nachträglich ändern → **unmöglich!** Nur einmal bei Erstellung wählbar
+- ❌ Bereits ein Oracle-Konto mit derselben Email → erst abmelden oder anderen Account nutzen
+
+---
+
+### Schritt 2: OCI Konsole öffnen
+
+**URL:** [https://cloud.oracle.com/](https://cloud.oracle.com/)
+
+Nach dem Login → Klicke auf **"Sign in to Cloud Console"** → wähle dein Konto.
+
+---
+
+### Schritt 3: A1.Flex Instance erstellen (4 OCPUs, 24 GB RAM — kostenlos!)
+
+1. In der OCI Console: **Hamburger Menu → Compute → Instances**
+2. Klicke **"Create Instance"**
+3. Konfiguration:
+   - **Name:** z.B. `sin-dev-vm`
+   - **Placement:** `eu-frankfurt-1` (oder `Germany Central` auswählen)
+     - ⚡ **Probiere alle 3 ADs durch** wenn "out of capacity" kommt:
+       - Frankfurt hat AD1, AD2, AD3
+       - Erst AD1 versuchen → wenn voll → AD2 → wenn voll → AD3
+   - **Image:** `Ubuntu 22.04 LTS` oder `24.04 LTS` ✅
+   - **Shape:** `VM.Standard.A1.Flex`
+     - **OCPUs:** 4 (Maximum für Always Free)
+     - **Memory:** 24 GB (Maximum für Always Free)
+   - **Networking:** Standard belassen (Virtual Cloud Network wird automatisch erstellt)
+   - **SSH Key:** Erstelle einen neuen SSH Key oder lade deinen Public Key hoch:
+     ```bash
+     # Auf deinem Mac: SSH Key erstellen (falls noch nicht vorhanden)
+     ssh-keygen -t ed25519 -C "deine-email@beispiel.de" -f ~/.ssh/oci_key
+     cat ~/.ssh/oci_key.pub  # Diesen Public Key bei Oracle einfügen
+     ```
+   - **Boot Volume:** Standard belassen
+
+4. Klicke **"Create"** → Warte 2-5 Minuten bis die Instance läuft
+
+---
+
+### Schritt 4: PAYGO-Workaround (falls alle ADs in Frankfurt "out of capacity" zeigen)
+
+Falls Frankfurt wirklich komplett voll ist und du keinen A1.Flex bekommst:
+
+1. **Aufwertung auf Pay-As-You-Go** (bleibt trotzdem kostenlos!):
+   - **Hamburger Menu → Billing → Manage Payment**
+   - Klicke **"Upgrade to Paid Account"**
+   - Oracle gibt dir **$300 kostenlose Credits** für 30 Tage
+   - Du bekommst Zugang zum **anderen Kapazitäts-Pool** (weniger überlaufen)
+
+2. **Wichtig dabei:**
+   - Solange du innerhalb der **Always-Free-Limits** bleibst (4 OCPUs, 24 GB RAM, 50 GB Storage), fallen **keine Kosten an**
+   - Setze sofort ein **Budget Alert** um sicherzugehen:
+     - **Hamburger Menu → Billing → Budget Alerts → Create Alert** (z.B. bei $5)
+   - Die $100 Card-Authorisierung wird nach ~7 Tagen automatisch freigegeben
+
+3. Dann erneut eine A1.Flex Instance erstellen → jetzt aus dem PAYGO-Pool → deutlich höhere Erfolgschance!
+
+---
+
+### Schritt 5: Verbindung zur VM via SSH
+
+Sobald die Instance läuft, kopiere die **Public IP** aus der OCI Console.
+
 ```bash
-ssh -i /pfad/zu/deinem/privaten_schlüssel ubuntu@<DEINE_PUBLIC_IP>
+# SSH Verbindung (ersetze <PFAD_ZU_KEY> und <VM_IP>)
+ssh -i ~/.ssh/oci_key ubuntu@<VM_IP>
 ```
+
+---
+
+### Schritt 6: Budget Alert setzen (Pflicht!)
+
+1. **Hamburger Menu → Billing → Budget Alerts → Create Budget Alert**
+2. Name: `Always-Free-Limit`
+3. Threshold: `$5 USD` (oder niedriger)
+4. Empfänger: Deine Email eintragen
+5. **Speichern** ✅
+
+> So wirst du sofort benachrichtigt falls doch mal Kosten entstehen sollten.
+
+---
+
+### Quick-Reference: Always-Free Limits für A1.Flex
+
+| Ressource | Always-Free-Limit |
+|-----------|-------------------|
+| OCPUs | 4 |
+| RAM | 24 GB |
+| Boot Volume | 50 GB |
+| Traffic Out | 10 TB/Monat |
+
+Solange du innerhalb dieser Limits bleibst → **kostenlos, solange du willst**.
+
+---
+
+### Troubleshooting
+
+| Problem | Lösung |
+|---------|--------|
+| "Out of capacity" in Frankfurt | Alle 3 ADs durchprobieren (AD1→AD2→AD3), oder PAYGO-Workaround |
+| Karte wird abgelehnt | Echte Kredit/Debitkarte nutzen, keine Prepaid |
+| Kein SMS-Code erhalten | Anruf statt SMS anfordern bei der Verifizierung |
+| $100 werden abgebucht | Temporär — wird nach ~7 Tagen freigegeben |
+| Instance startet nicht | OCI Status prüfen → ggf. andere AD oder Region versuchen |
 
 ---
 

@@ -1,0 +1,7 @@
+[Unit]
+Description=Cleanup GitHub Actions Runner temp .so files
+After=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/cleanup-runner-libs.sh

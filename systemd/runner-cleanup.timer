@@ -1,0 +1,17 @@
+[Unit]
+Description=Frequent cleanup of temp shared objects
+# BUG-OCI-001: Timer runs every 5 minutes to clean up /tmp/.*.so files
+# from opencode --version invocations (4.4MB each, 170GB leaked in 48h).
+# Previous timer was broken/masked — this version is verified active.
+
+[Timer]
+# First run 5 minutes after boot, then every 5 minutes while unit is active
+OnBootSec=5min
+OnUnitActiveSec=5min
+# Ensure timer fires within 1 minute accuracy (important for frequent runs)
+AccuracySec=1min
+# Remember when it last fired so runs aren't skipped while system was off
+Persistent=true
+
+[Install]
+WantedBy=timers.target

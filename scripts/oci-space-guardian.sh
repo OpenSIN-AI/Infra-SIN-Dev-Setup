@@ -82,4 +82,10 @@ fi
 # === POST-CLEANup snapshot ===
 after_pct="$(current_use_pct)"
 after_avail="$(current_avail_gb)"
+if [ "$after_pct" -ge 85 ] && [ -x /usr/local/bin/oci-emergency-disk-guard.sh ]; then
+    log "root=${after_pct}% exceeds emergency threshold, invoking emergency guard"
+    /usr/local/bin/oci-emergency-disk-guard.sh >/dev/null 2>&1 || true
+    after_pct="$(current_use_pct)"
+    after_avail="$(current_avail_gb)"
+fi
 log "done: root=${after_pct}% avail=${after_avail}G"

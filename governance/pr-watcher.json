@@ -1,0 +1,23 @@
+{
+  "$schema": "https://opencode.local/templates/pr-watcher.schema.json",
+  "enabled": true,
+  "repo": "OpenSIN-AI/Infra-SIN-Dev-Setup",
+  "prSource": "all",
+  "ignoreAuthors": ["dependabot[bot]"],
+  "ignoreBots": false,
+  "noisePrefixes": ["chore(deps):", "ci:"],
+  "noiseSubstrings": ["bump version", "auto-generated"],
+  "watcherScript": "scripts/watch-pr-feedback.sh",
+  "followupCommand": "gh pr view --comments",
+  "stateDir": ".pr-watcher-state",
+  "summaryFile": ".pr-watcher-state/summary.json",
+  "logFile": ".pr-watcher-state/watcher.log",
+  "reviewPolicy": {
+    "autoReviewEnabled": true,
+    "autoReviewModel": "opencode run --format json",
+    "credentialScanEnabled": true,
+    "credentialPatterns": ["OCI_", "SUPABASE_", "BOX_", "password", "secret"],
+    "requiredFilesCheckEnabled": true,
+    "requiredFilesManifest": "required-files.manifest.json"
+  }
+}

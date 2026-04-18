@@ -1,0 +1,27 @@
+{
+  "$schema": "https://opencode.local/templates/repo-governance.schema.json",
+  "repo": "OpenSIN-AI/Infra-SIN-Dev-Setup",
+  "issueFirstRequired": true,
+  "prWatcherRequired": true,
+  "strictDispatchMatrixRequired": false,
+  "platformRegistryRef": "platforms/registry.json",
+  "prWatcherConfigRef": "governance/pr-watcher.json",
+  "coderDispatchMatrixRef": null,
+  "workItemSchemaRef": "https://opencode.local/templates/work-item.schema.json",
+  "defaultLabels": ["inbound", "infra", "governance"],
+  "automationFlow": [
+    "1. Intake arrives through a webhook or poller",
+    "2. Payload is normalized to the work-item schema",
+    "3. GitHub issue is created before infrastructure execution",
+    "4. Work proceeds through PRs with watcher validation",
+    "5. Merge remains fail-closed until watcher checks pass"
+  ],
+  "failClosedRules": [
+    "Unregistered platforms are blocked",
+    "Missing webhook authentication blocks intake",
+    "Missing required files block merge",
+    "Credential leaks block merge immediately",
+    "Unknown check results block merge"
+  ],
+  "trackingIssue": 38
+}

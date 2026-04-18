@@ -1,0 +1,10 @@
+{
+  "requiredFiles": [
+    "governance/repo-governance.json",
+    "governance/pr-watcher.json",
+    "platforms/registry.json",
+    "n8n-workflows/inbound-intake.json",
+    "docs/03_ops/inbound-intake.md",
+    "scripts/watch-pr-feedback.sh"
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "$schema": "https://opencode.local/templates/platform-registry.schema.json",
+  "version": "2026.04.17",
+  "platforms": [
+    {
+      "id": "github-issues",
+      "name": "GitHub Issues",
+      "category": "issue-tracker",
+      "enabled": true,
+      "status": "active",
+      "intakeMode": "webhook",
+      "webhookPath": "/webhooks/github",
+      "signatureRequired": true,
+      "authRef": "env:GITHUB_WEBHOOK_SECRET",
+      "baseUrl": "https://api.github.com",
+      "eventTypes": ["issues.opened", "issues.edited", "issues.labeled"],
+      "normalizer": "n8n-workflows/inbound-intake.json",
+      "dedupeKeyTemplate": "github:OpenSIN-AI/Infra-SIN-Dev-Setup:issue:{{externalId}}",
+      "defaultRepo": "OpenSIN-AI/Infra-SIN-Dev-Setup",
+      "defaultLabels": ["inbound", "github", "infra"],
+      "watcherRequired": true,
+      "watcherConfigRef": "governance/pr-watcher.json",
+      "riskLevel": "low",
+      "automationPolicy": "issue_plus_pr",
+      "allowedActions": ["create_issue", "update_issue", "create_branch", "create_pr"],
+      "forbiddenActions": ["force_push", "delete_branch_main"],
+      "evidenceRequired": false,
+      "retentionDays": 365,
+      "notes": "Canonical issue-first intake surface for infrastructure changes."
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "name": "Inbound Work Intake Template",
+  "nodes": [
+    { "name": "Inbound Trigger", "type": "n8n-nodes-base.webhook", "notes": "Webhook or poller entrypoint" },
+    { "name": "Verify Signature Or Cursor", "type": "n8n-nodes-base.code", "notes": "Validate source before mutation" },
+    { "name": "Normalize To Work Item", "type": "n8n-nodes-base.set", "notes": "Map to work-item schema" },
+    { "name": "Create Or Update GitHub Issue", "type": "n8n-nodes-base.httpRequest", "notes": "Issue-first intake" }
+  ],
+  "connections": {},
+  "meta": {
+    "purpose": "canonical inbound platform intake skeleton",
+    "contract": "~/.config/opencode/templates/work-item.schema.json"
+  }
+}

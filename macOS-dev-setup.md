@@ -61,7 +61,7 @@
 </td>
 <td width="20%" align="center">
 <strong>4. OpenCode Stack</strong><br/><br/>
-<code>gh repo clone Delqhi/upgraded-opencode-stack && cd upgraded-opencode-stack && ./install.sh</code><br/><br/>
+<code>gh repo clone OpenSIN-Code/Infra-SIN-OpenCode-Stack && cd upgraded-opencode-stack && ./install.sh</code><br/><br/>
 <img src="https://img.shields.io/badge/⏱️_10min-Blue?style=flat" />
 </td>
 <td width="20%" align="center">
@@ -345,7 +345,7 @@ echo "# Chrome Profil: info@zukunftsorientierte-energie.de" > ~/dev/docs/chrome/
 
 ```bash
 # Repository klonen (MIT GH CLI!)
-gh repo clone Delqhi/upgraded-opencode-stack ~/dev/upgraded-opencode-stack
+gh repo clone OpenSIN-Code/Infra-SIN-OpenCode-Stack ~/dev/upgraded-opencode-stack
 cd ~/dev/upgraded-opencode-stack
 
 # Installation starten
@@ -398,7 +398,7 @@ Nach dem Setup:
 
 1. **[OCI-dev-setup.md](./OCI-dev-setup.md)** — Oracle Cloud VM mit n8n, A2A-SIN-GitHub-Action und Box.com Storage aufsetzen
 2. **[opencode-dev-setup.md](./opencode-dev-setup.md)** — OpenCode CLI konfigurieren und autentifizieren
-3. **[upgraded-opencode-stack](https://github.com/Delqhi/upgraded-opencode-stack)** — `./install.sh` ausführen falls noch nicht done
+3. **[upgraded-opencode-stack](https://github.com/OpenSIN-Code/Infra-SIN-OpenCode-Stack)** — `./install.sh` ausführen falls noch nicht done
 
 > [!TIP]
 > Für eine vollständige OCI VM mit n8n, A2A-SIN-GitHub-Action und Box.com Storage → folge `OCI-dev-setup.md` Schritt für Schritt.
@@ -449,7 +449,7 @@ limactl start default
 # Lokal nicht nötig — unsere n8n Workflows laufen auf der OCI VM
 
 # opencode CLI — vom upgraded-opencode-stack
-# Installation via: gh repo clone Delqhi/upgraded-opencode-stack && cd upgraded-opencode-stack && ./install.sh
+# Installation via: gh repo clone OpenSIN-Code/Infra-SIN-OpenCode-Stack && cd upgraded-opencode-stack && ./install.sh
 
 # Box.com Storage — für Logs/Screenshots
 # Via A2A-SIN-Box-Storage Service (room-09-box-storage)

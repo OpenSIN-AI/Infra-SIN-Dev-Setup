@@ -1,13 +1,13 @@
 # oh-my-sin.json — Zentrales A2A Team Register
 
 <p align="center">
-<a href="https://github.com/Delqhi/upgraded-opencode-stack/blob/main/LICENSE">
+<a href="https://github.com/OpenSIN-Code/Infra-SIN-OpenCode-Stack/blob/main/LICENSE">
 <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License" />
 </a>
-<a href="https://github.com/Delqhi/upgraded-opencode-stack">
-<img src="https://img.shields.io/github/stars/Delqhi/upgraded-opencode-stack?style=social" alt="Stars" />
+<a href="https://github.com/OpenSIN-Code/Infra-SIN-OpenCode-Stack">
+<img src="https://img.shields.io/github/stars/OpenSIN-Code/Infra-SIN-OpenCode-Stack?style=social" alt="Stars" />
 </a>
-<a href="https://github.com/Delqhi/upgraded-opencode-stack/network/members">
+<a href="https://github.com/OpenSIN-Code/Infra-SIN-OpenCode-Stack/network/members">
 <img src="https://img.shields.io/badge/17-Teams-7B3FE4?style=flat" alt="17 Teams" />
 </a>
 </p>
@@ -203,7 +203,7 @@ upgraded-opencode-stack/
 └── ... (mehr Team Configs)
 ```
 
-**Link:** [github.com/Delqhi/upgraded-opencode-stack/blob/main/oh-my-sin.json](https://github.com/Delqhi/upgraded-opencode-stack/blob/main/oh-my-sin.json)
+**Link:** [github.com/OpenSIN-Code/Infra-SIN-OpenCode-Stack/blob/main/oh-my-sin.json](https://github.com/OpenSIN-Code/Infra-SIN-OpenCode-Stack/blob/main/oh-my-sin.json)
 
 ---
 

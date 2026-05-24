@@ -59,7 +59,7 @@ xcode-select --install
 brew install git node bun python gh docker
 
 # 4. Clone upgraded-opencode-stack
-gh repo clone Delqhi/upgraded-opencode-stack ~/dev/upgraded-opencode-stack
+gh repo clone OpenSIN-Code/Infra-SIN-OpenCode-Stack ~/dev/upgraded-opencode-stack
 cd ~/dev/upgraded-opencode-stack && ./install.sh
 
 # 5. Initialize Global Brain (MANDATORY!)
@@ -85,8 +85,8 @@ sin-sync
 
 ## Related Repos
 
-- [upgraded-opencode-stack](https://github.com/Delqhi/upgraded-opencode-stack) — Complete OpenCode CLI Stack (Skills, Plugins, Agents, Commands, oh-my-sin.json)
-- [oh-my-sin.json](https://github.com/Delqhi/upgraded-opencode-stack/blob/main/oh-my-sin.json) — Zentrales A2A Team Register (17 Teams)
+- [upgraded-opencode-stack](https://github.com/OpenSIN-Code/Infra-SIN-OpenCode-Stack) — Complete OpenCode CLI Stack (Skills, Plugins, Agents, Commands, oh-my-sin.json)
+- [oh-my-sin.json](https://github.com/OpenSIN-Code/Infra-SIN-OpenCode-Stack/blob/main/oh-my-sin.json) — Zentrales A2A Team Register (17 Teams)
 - [OpenSIN-onboarding](https://github.com/OpenSIN-AI/OpenSIN-onboarding) — End-User Onboarding
 - [OpenSIN-documentation](https://github.com/OpenSIN-AI/OpenSIN-documentation) — Complete Project Documentation
 - [Infra-SIN-Docker-Empire](https://github.com/OpenSIN-AI/Infra-SIN-Docker-Empire) — Docker Infrastructure for Production

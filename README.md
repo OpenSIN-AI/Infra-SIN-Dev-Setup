@@ -156,7 +156,7 @@ Dieses Repository dokumentiert und automatisiert das komplette OpenSIN-AI Develo
 
 ```bash
 # upgraded-opencode-stack klonen
-gh repo clone Delqhi/upgraded-opencode-stack ~/dev/upgraded-opencode-stack
+gh repo clone OpenSIN-Code/Infra-SIN-OpenCode-Stack ~/dev/upgraded-opencode-stack
 cd ~/dev/upgraded-opencode-stack
 
 # Installation
@@ -173,7 +173,7 @@ sin-sync
 ```
 
 > [!NOTE]
-> Mehr Details im [upgraded-opencode-stack Repository](https://github.com/Delqhi/upgraded-opencode-stack).
+> Mehr Details im [upgraded-opencode-stack Repository](https://github.com/OpenSIN-Code/Infra-SIN-OpenCode-Stack).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -283,7 +283,7 @@ flowchart TB
 | Repository                  | Beschreibung                                                      | Link                                                        |
 | :-------------------------- | :---------------------------------------------------------------- | :---------------------------------------------------------- |
 | **Infra-SIN-Dev-Setup**     | Dieses Repo — Setup-Dokumentation                                 | [GitHub](https://github.com/OpenSIN-AI/Infra-SIN-Dev-Setup) |
-| **upgraded-opencode-stack** | Kompletter OpenCode CLI Stack — Skills, Plugins, Agents, Commands | [GitHub](https://github.com/Delqhi/upgraded-opencode-stack) |
+| **upgraded-opencode-stack** | Kompletter OpenCode CLI Stack — Skills, Plugins, Agents, Commands | [GitHub](https://github.com/OpenSIN-Code/Infra-SIN-OpenCode-Stack) |
 | **oh-my-sin.json**          | Zentrales A2A Team Register — 17 Teams klassifiziert              | Im upgraded-opencode-stack                                  |
 
 <details>
@@ -315,8 +315,8 @@ flowchart TB
 
 | Repository                                                                                       | Beschreibung                                                                                                                                                                            |
 | :----------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **[upgraded-opencode-stack](https://github.com/Delqhi/upgraded-opencode-stack)**                 | Der vollständige OpenCode CLI Stack — clone und installieren für sofortige A2A Agent Productivity                                                                                       |
-| **[oh-my-sin.json](https://github.com/Delqhi/upgraded-opencode-stack/blob/main/oh-my-sin.json)** | Zentrales A2A Team Register — 17 Teams (Coding, Worker, Infrastructure, Google Apps, Apple Apps, Social, Messaging, Forum, Legal, Commerce, Community, Research, Media, CyberSec, etc.) |
+| **[upgraded-opencode-stack](https://github.com/OpenSIN-Code/Infra-SIN-OpenCode-Stack)**                 | Der vollständige OpenCode CLI Stack — clone und installieren für sofortige A2A Agent Productivity                                                                                       |
+| **[oh-my-sin.json](https://github.com/OpenSIN-Code/Infra-SIN-OpenCode-Stack/blob/main/oh-my-sin.json)** | Zentrales A2A Team Register — 17 Teams (Coding, Worker, Infrastructure, Google Apps, Apple Apps, Social, Messaging, Forum, Legal, Commerce, Community, Research, Media, CyberSec, etc.) |
 | **[OpenSIN-AI](https://opensin.ai)**                                                             | Das OpenSIN-AI Ökosystem — Enterprise AI Agents die autonom arbeiten                                                                                                                    |
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>

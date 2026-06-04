@@ -1,0 +1,226 @@
+# Purpose: CEO Audit — SOTA repository review (47 gates, 8 axes)
+# Docs: https://github.com/OpenSIN-Code/SIN-Code-Bundle/tree/main/src/sin_code_bundle/skills/ceo-audit
+#
+# Runs the full CEO Audit on every push and PR. Posts a Markdown
+# comment on the PR with the grade, top 3 risks, and a link to the
+# full report. Fails if grade < B (configurable via --grade flag).
+#
+# Required secrets: none (uses built-in GITHUB_TOKEN)
+# Optional inputs: profile (default: QUICK), grade (default: B)
+
+name: ceo-audit
+
+on:
+  # NUR main/master (Branches sind verboten — siehe globale AGENTS.md).
+  # PRs sind weiterhin willkommen (last line of defense wenn doch einer entsteht).
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+    inputs:
+      profile:
+        description: 'Audit profile: QUICK | RELEASE | SECURITY | FULL'
+        required: false
+        default: 'QUICK'
+      grade:
+        description: 'Minimum grade to pass: A | B | C'
+        required: false
+        default: 'B'
+
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+
+jobs:
+  ceo-audit:
+    name: CEO Audit (${{ inputs.profile || 'QUICK' }}, grade≥${{ inputs.grade || 'B' }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      AUDIT_PROFILE: ${{ inputs.profile || 'QUICK' }}
+      AUDIT_GRADE: ${{ inputs.grade || 'B' }}
+      AUDIT_REPO: ${{ github.workspace }}
+      AUDIT_RUN_ID: ${{ github.run_id }}
+      AUDIT_SHA: ${{ github.sha }}
+      CEO_AUDIT_OUTPUT: ${{ github.workspace }}/ceo-audit-output
+      # The bundle's audit.sh defaults to $HOME/ceo-audits; we override to
+      # match the workflow's expected ceo-audit-output/ path so score.json
+      # lands where the next steps (upload-sarif, comment) expect it.
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # full history for regression detection
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install SIN-Code Bundle (with ceo-audit skill)
+        # Try PyPI first, fall back to GitHub (bundle is not yet on PyPI).
+        # Once published: pip install "sin-code-bundle[ceo-audit,dev]"
+        run: |
+          pip install "sin-code-bundle[ceo-audit,dev]" || \
+            pip install "sin-code-bundle[ceo-audit,dev] @ git+https://github.com/OpenSIN-Code/SIN-Code-Bundle.git@v0.4.4"
+
+      - name: Install ceo-audit skill
+        run: |
+          # sin-code-bundle does not yet ship the skill scripts.
+          # Clone the SSOT (Infra-SIN-OpenCode-Stack) to get audit.sh + axis scripts.
+          git clone --depth 1 --branch main https://github.com/OpenSIN-Code/Infra-SIN-OpenCode-Stack.git ${{ github.workspace }}/infra
+          mkdir -p ~/.config/opencode/skills/ceo-audit
+          cp -r ${{ github.workspace }}/infra/skills/ceo-audit/scripts ~/.config/opencode/skills/ceo-audit/
+          cp -r ${{ github.workspace }}/infra/skills/ceo-audit/lib ~/.config/opencode/skills/ceo-audit/
+          chmod +x ~/.config/opencode/skills/ceo-audit/scripts/audit.sh
+          ls ~/.config/opencode/skills/ceo-audit/scripts/audit.sh
+
+      - name: Locate audit.sh on PATH
+        id: locate
+        run: |
+          # After 'pip install sin-code-bundle[ceo-audit,dev]', audit.sh is
+          # shipped at <site-packages>/sin_code_bundle/resources/ceo-audit/scripts/audit.sh.
+          # We also accept a git-clone of the skill to ~/.config/opencode/skills/.
+          SITE_PKG_SCRIPT=$(python3 -c "import sin_code_bundle, os; root=os.path.dirname(sin_code_bundle.__file__); p=os.path.join(root,'resources','ceo-audit','scripts','audit.sh'); print(p if os.path.isfile(p) else '')" 2>/dev/null)
+          if [ -n "$SITE_PKG_SCRIPT" ] && [ -f "$SITE_PKG_SCRIPT" ]; then
+            echo "script=$SITE_PKG_SCRIPT" >> $GITHUB_OUTPUT
+          elif [ -f ~/.config/opencode/skills/ceo-audit/scripts/audit.sh ]; then
+            echo "script=~/.config/opencode/skills/ceo-audit/scripts/audit.sh" >> $GITHUB_OUTPUT
+          else
+            echo '::error::Could not locate audit.sh (not in site-packages, not on disk)'
+            exit 1
+          fi
+          echo "Located audit script: $SITE_PKG_SCRIPT"
+
+      - name: Run CEO Audit
+        id: audit
+        run: |
+          mkdir -p ceo-audit-output
+          # Run audit; capture exit code (allow failure so we can still post the report)
+          set +e
+          ${{ steps.locate.outputs.script }} \
+            "$AUDIT_REPO" \
+            --profile="$AUDIT_PROFILE" \
+            --grade="$AUDIT_GRADE" \
+            --output="$AUDIT_REPO/ceo-audit-output" \
+            --json 2>&1 | tee ceo-audit-output/console.log
+          AUDIT_EXIT=$?
+          set -e
+          echo "audit_exit_code=$AUDIT_EXIT" >> $GITHUB_OUTPUT
+          # Don't fail the step yet — we want to always upload the report + post the comment
+
+      - name: Upload audit artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ceo-audit-${{ github.run_id }}
+          path: ceo-audit-output/
+          retention-days: 30
+          if-no-files-found: warn
+
+      - name: Extract grade from score.json
+        id: grade
+        if: always()
+        run: |
+          SCORE_FILE=$(find ceo-audit-output -name 'score.json' | head -1)
+          if [ -z "$SCORE_FILE" ]; then
+            echo "::error::CEO Audit did not produce score.json"
+            echo "grade=unknown" >> $GITHUB_OUTPUT
+            echo "score=0" >> $GITHUB_OUTPUT
+            echo "verdict=Audit failed" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          GRADE=$(jq -r '.grade // "?"' "$SCORE_FILE")
+          SCORE=$(jq -r '.score // 0' "$SCORE_FILE")
+          CRITICAL=$(jq -r '.critical // 0' "$SCORE_FILE")
+          HIGH=$(jq -r '.high // 0' "$SCORE_FILE")
+          echo "grade=$GRADE" >> $GITHUB_OUTPUT
+          echo "score=$SCORE" >> $GITHUB_OUTPUT
+          echo "critical=$CRITICAL" >> $GITHUB_OUTPUT
+          echo "high=$HIGH" >> $GITHUB_OUTPUT
+          echo "::notice::CEO Audit: $GRADE ($SCORE/100) | critical=$CRITICAL high=$HIGH"
+
+      - name: Post PR comment
+        if: github.event_name == 'pull_request' && always()
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: ceo-audit
+          message: |
+            ## 🏆 CEO Audit — ${{ steps.grade.outputs.grade || '?' }} (${{ steps.grade.outputs.score || '0' }}/100)
+
+            | Metric | Value |
+            |--------|-------|
+            | **Grade** | **${{ steps.grade.outputs.grade || '?' }}** |
+            | **Score** | **${{ steps.grade.outputs.score || '0' }}/100** |
+            | **Critical findings** | ${{ steps.grade.outputs.critical || '0' }} |
+            | **High findings** | ${{ steps.grade.outputs.high || '0' }} |
+            | **Profile** | `${{ env.AUDIT_PROFILE }}` |
+            | **Min grade gate** | ${{ env.AUDIT_GRADE }} |
+
+            📥 [Download full report (Markdown)](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}#artifacts)
+            📊 [Download SARIF (for Code Scanning)](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}#artifacts)
+
+            > Run `${{ env.AUDIT_PROFILE == 'FULL' && '~/.config/opencode/skills/ceo-audit/scripts/audit.sh . --profile=FULL' || '~/.config/opencode/skills/ceo-audit/scripts/audit.sh . --profile=QUICK' }}` locally to reproduce.
+
+      - name: Post official audit comment (SIN-GitHub-Issues App)
+        if: github.event_name == 'pull_request' && always()
+        # Token resolution chain (highest priority first):
+        #   1. SIN_GITHUB_INSTALLATION_TOKEN (org secret, App identity, public repos only)
+        #   2. SIN_GITHUB_FALLBACK_TOKEN (repo secret, PAT — works on ALL repos incl. private)
+        #   3. GITHUB_TOKEN (built-in, Action identity, always present)
+        # Resolution happens inside post_audit_pr.py via github_app.get_token().
+        # If ALL tokens are missing, the step fails but continue-on-error prevents
+        # the workflow from blocking on App issues.
+        continue-on-error: true
+        env:
+          PYTHONPATH: ${{ github.workspace }}/infra/skills/ceo-audit/lib
+          SIN_GITHUB_APP_CLIENT_ID: Iv23livllaHIBTdQdyhY
+          # Chain of GitHub tokens (post_audit_pr.py picks the first available).
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SIN_GITHUB_FALLBACK_TOKEN: ${{ secrets.SIN_GITHUB_FALLBACK_TOKEN }}
+        run: |
+          # post_audit_pr.py lives in the cloned Infra repo (see 'Install ceo-audit skill' step)
+          # score.json is written by audit.sh to ~/ceo-audits/<repo>-ceo-audit-<runid>/score.json
+          # We search both ceo-audit-output/ and ~/ceo-audits/ to be robust.
+          SCORE_FILE=$(find $HOME/ceo-audits ceo-audit-output -name 'score.json' 2>/dev/null | head -1)
+          if [ -z "$SCORE_FILE" ]; then
+            echo "::warning::No score.json found — skipping App commenter (Action comment above still posts)"
+            exit 0
+          fi
+          echo "Using score.json: $SCORE_FILE"
+          python3 ${{ github.workspace }}/infra/skills/ceo-audit/scripts/post_audit_pr.py \
+            --repo ${{ github.repository }} \
+            --pr ${{ github.event.pull_request.number }} \
+            --score-json "$SCORE_FILE" \
+            --artifact-url ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }} \
+            --run-id ${{ github.run_id }}
+
+      - name: Fail if grade below gate
+        if: github.event_name == 'pull_request'
+        run: |
+          GRADE="${{ steps.grade.outputs.grade }}"
+          GRADE_NUM="${{ steps.grade.outputs.score }}"
+          GATE="${{ env.AUDIT_GRADE }}"
+          case "$GATE" in
+            A) MIN=85 ;;
+            B) MIN=70 ;;
+            C) MIN=55 ;;
+            *) MIN=0 ;;
+          esac
+          # Allow only A and B by default
+          if (( $(echo "$GRADE_NUM < $MIN" | bc -l) )); then
+            echo "::error::Grade $GRADE ($GRADE_NUM) below gate $GATE (need ≥$MIN)"
+            exit 1
+          fi
+          echo "::notice::Grade gate passed: $GRADE ($GRADE_NUM) ≥ $GATE ($MIN)"
+
+      - name: Upload SARIF to Code Scanning
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: ${{ github.workspace }}/ceo-audit-output/report.sarif
+          category: ceo-audit
+        continue-on-error: true
